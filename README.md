@@ -1,39 +1,58 @@
 # 🛥️ Nexus-XPanel - Integrated Yacht Control System
 
-**Nexus-XPanel** è una dashboard di controllo di nuova generazione per yacht di lusso, ottimizzata per display touch-screen (Surface, iPad, Tablet industriali). Il sistema fonde un'estetica futuristica *Glassmorphism* con funzionalità critiche di navigazione e intrattenimento.
+![Nexus-XPanel Landing Page](assets/landing-page.jpg)
 
-🌐 **Live Demo:** [https://iacreatorcar.github.io/Nexus-XPanel/](https://iacreatorcar.github.io/Nexus-XPanel/)
+**Nexus-XPanel** is a high-end, integrated dashboard for luxury yacht management, optimized for touch-screen displays such as Microsoft Surface, iPads, and industrial marine monitors.
 
-## 🚀 Caratteristiche Tecniche d'Avanguardia
+🌐 **Live Demo (GitHub):** [https://iacreatorcar.github.io/Nexus-XPanel/](https://iacreatorcar.github.io/Nexus-XPanel/)
+🚀 **Mirror Link (Vercel):** [https://nexus-xpanel.vercel.app/](https://nexus-xpanel.vercel.app/)
 
-### 🎵 Universal Media Hub (Progetto Unico)
-Nexus-XPanel introduce un concetto di gestione audio inedito:
-- **Direct Stream Injection**: Player YouTube integrato con possibilità di cambiare sorgente live tramite URL.
-- **Local Drop Zone**: Funzionalità "VLC-Style" che permette di trascinare file audio locali (.mp3, .wav) direttamente nel browser. Utilizza l'API `URL.createObjectURL` per gestire i file in memoria locale senza caricamento su server.
-- **Multi-Platform Support**: Switch rapido tra YouTube Music, Spotify ed Apple Music.
+---
+
+## 👨‍💻 About the Author
+**Created by Carmine D'Alise** *Senior Digital Experience Lead | Strategic Consultant*
+
+After years of on-board operations as a **Field Technician**, **Multimedia**, and **Digital Lead**, my passion for emerging technologies drives me to transform field experience into innovative digital solutions. I am constantly evolving my expertise through Open Source systems and Hospitality Mode integrations to redefine the luxury digital experience at sea.
+
+---
+
+## 🚀 Key Features
+
+### 🎵 Universal Media Hub
+Nexus-XPanel introduces a unique audio management concept:
+- **Direct Stream Injection**: Integrated YouTube player with live source switching via URL.
+- **Local Drop Zone**: "VLC-Style" functionality allowing users to drag and drop local audio files (`.mp3`, `.wav`) directly into the browser. It utilizes the `URL.createObjectURL` API to handle files in local memory without server uploads.
+- **Multi-Platform Support**: Seamlessly switch between YouTube Music, Spotify, and Apple Music.
 
 ### 🌡️ Smart Home & Automation Logic
-- **Visual Feedback Engine**: Il modulo clima utilizza una logica di calcolo dinamico per variare il `box-shadow` e l'opacità dei colori in base ai valori del termostato.
-- **Global Scene Management**: Sistema di trigger centralizzato per gestire simultaneamente illuminazione e climatizzazione (Night, Party, Relax, Full).
+- **Visual Feedback Engine**: The climate module uses dynamic calculation logic to vary `box-shadow` and color opacity based on real-time thermostat values.
+- **Global Scene Management**: Centralized trigger system for simultaneous management of RGB lighting and HVAC (Night, Party, Relax, Full modes).
 
 ### 🛰️ Tactical Bridge (Navigation)
-- **Advanced Radar Skin**: Manipolazione dinamica dei layer di Google Maps tramite filtri CSS (invert, hue-rotate, brightness) per garantire la visibilità notturna (Night Mode) senza abbagliare l'equipaggio.
-- **Telemetry Simulation**: Scripting asincrono per la simulazione di dati NMEA (Speed, Depth, Heading).
+- **Advanced Radar Skin**: Dynamic manipulation of Google Maps layers via CSS filters (`invert`, `hue-rotate`, `brightness`) to provide "Night Mode" visibility without blinding the crew.
+- **Telemetry Simulation**: Asynchronous scripting for simulating NMEA data (Speed, Depth, Heading).
 
-## 🛠️ Setup Locale & Backend (Technical Notes)
+---
 
-Anche se il progetto è pronto per il deploy statico (Vercel/GitHub Pages), ecco come gestirlo in locale:
+## 🛠️ Technical Implementation (The "Back-end" Logic)
 
-1. **Struttura Asset**:
-   - Assicurarsi che le immagini siano in `/assets/image/`.
-   - Il file `style.css` contiene tutte le variabili CSS globali (Cyber-Cyan, Glass-Blur).
-2. **Backend & Security**:
-   - **CORS Policy**: Per lo streaming IPTV (.m3u8), il progetto richiede un server web attivo. In locale, si consiglia l'uso di **Live Server** (VS Code) o un server Node.js/Express per evitare blocchi Cross-Origin.
-   - **Local Files**: La funzione Drag & Drop funziona esclusivamente in contesti sicuri (HTTPS o localhost).
+While the project is deployed as a static site, it incorporates complex "Back-end-like" logic handled client-side to ensure maximum speed and privacy:
 
-## 📂 Struttura del Progetto
-- `index.html`: Portale d'accesso con feedback tattile.
-- `music.html`: Hub multimediale universale.
-- `domotica.html`: Controllo clima e luci RGB.
-- `nav.html`: Plancia radar tattica.
-- `iptv.html`: Sistema TV streaming HLS.
+1. **File System Access API (Simulation)**: The "VLC-style" player acts as a local server by creating temporary blobs. This allows the yacht to play local media libraries without needing an active internet connection for those specific files.
+2. **HLS/M3U8 Streaming Engine**: The IPTV section is built to interface with satellite streaming encoders. It requires a secure context (HTTPS) or a local Node.js proxy to bypass CORS policies when fetching live streams from onboard hardware.
+3. **State Management**: The UI maintains the "state" of the yacht (e.g., current temperature or light scene) through JavaScript objects, simulating a real-time connection to a PLC or Crestron/AMX processor.
+4. **Environment Setup**:
+   - **Frontend**: HTML5, CSS3 (Custom Properties & Keyframes), Vanilla JavaScript.
+   - **Local Backend (Development)**: To test IPTV and advanced features, it is recommended to run a local server (e.g., `Live Server` in VS Code or `Node.js/Express`) to handle HLS stream headers correctly.
+
+---
+
+## 📂 Project Structure
+- `index.html`: Main gateway with tactile feedback.
+- `music.html`: Universal multimedia hub.
+- `domotica.html`: HVAC and RGB lighting control.
+- `nav.html`: Tactical radar bridge.
+- `iptv.html`: HLS streaming television system.
+
+## ⚓ License
+This project is licensed under **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
