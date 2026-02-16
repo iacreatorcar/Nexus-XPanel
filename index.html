@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nexus OS - Welcome Onboard</title>
     <link rel="stylesheet" href="style.css">
     
@@ -16,13 +16,14 @@
 
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #000;
-        }
+    margin: 0;
+    padding: 0;
+    min-height: 100%; /* Cambiato da height a min-height */
+    overflow-x: hidden;
+    overflow-y: auto; /* Permette lo scorrimento verticale */
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+}
 
         /* Sfondo */
         .bg-setup {
@@ -34,26 +35,24 @@
         }
 
         .main-portal {
-            position: relative;
-            z-index: 2;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 80px 0;
-            text-align: center;
-        }
+    position: relative;
+    z-index: 2;
+    min-height: 100vh; /* Usa min-height così può crescere se serve */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Allinea dall'alto così non "scappa" il contenuto */
+    padding: 40px 0 120px 0;
+    text-align: center;
+}
 
-        /* Testi Superiori - Scuri per massima leggibilità */
         .welcome-text {
             animation: fadeIn 1.5s ease-out;
-            transition: transform 0.2s ease; /* Per l'effetto click */
+            transition: transform 0.2s ease;
         }
         
-        /* NEXUS si abbassa al click */
         body:active .welcome-text {
-            transform: translateY(15px);
+            transform: translateY(10px);
         }
 
         .welcome-text h1 { 
@@ -61,7 +60,7 @@
             font-size: 70px; 
             letter-spacing: 25px; 
             margin: 0; 
-            color: #0a0a0a; /* Quasi nero per il sole */
+            color: #0a0a0a;
         }
 
         .welcome-text p { 
@@ -80,10 +79,11 @@
             gap: 25px;
             max-width: 1200px;
             width: 92%;
+            margin: 40px 0;
         }
 
         .portal-card {
-            background: rgba(0, 0, 0, 0.75); /* Molto scuro */
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -98,7 +98,7 @@
         }
 
         .portal-card:hover {
-            transform: translateY(-20px);
+            transform: translateY(-15px);
             border-color: #00f2ff;
             background: rgba(0, 0, 0, 0.85);
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
@@ -110,7 +110,6 @@
             filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
         }
 
-        /* Testo Card - Titoli molto scuri */
         .portal-card h3 { 
             color: #ffffff; 
             font-size: 17px; 
@@ -127,7 +126,6 @@
             font-weight: 600;
         }
 
-        /* Testo inferiore scuro */
         .footer-text {
             color: #0a0a0a;
             font-size: 14px;
@@ -137,14 +135,67 @@
             opacity: 0.8;
         }
 
+        /* Footer Firma */
+        .nexus-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            text-align: center;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nexus-footer p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .nexus-footer strong {
+            color: #00f2ff;
+            font-weight: 800;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .portal-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .welcome-text h1 { font-size: 55px; letter-spacing: 18px; }
+        }
+
+        /* Smartphone */
+        @media (max-width: 600px) {
+            .main-portal { padding: 40px 15px 120px 15px; }
+            
+            .welcome-text h1 { font-size: 38px; letter-spacing: 10px; }
+            .welcome-text p { font-size: 12px; letter-spacing: 4px; }
+
+            .portal-grid { 
+                grid-template-columns: 1fr; 
+                gap: 15px; 
+                width: 100%;
+            }
+
+            .portal-card { 
+                padding: 35px 20px; 
+                border-radius: 30px; 
+            }
+
+            .icon-box { font-size: 38px; margin-bottom: 15px; }
+            
+            .nexus-footer p { font-size: 9px; padding: 0 10px; }
+        }
+
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(-30px); } 
             to { opacity: 1; transform: translateY(0); } 
-        }
-
-        @media (max-width: 1024px) {
-            .portal-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-            .welcome-text h1 { font-size: 50px; letter-spacing: 15px; }
         }
     </style>
 </head>
@@ -186,8 +237,10 @@
         
         <div class="footer-text">SECURE CONNECTION ACTIVE</div>
     </div>
-<footer class="nexus-footer">
-    <p>© 2026 Nexus-XPanel | Developed by <strong>Carmine D'Alise</strong> - Senior Digital Experience Lead</p>
-</footer>
+
+    <footer class="nexus-footer">
+        <p>© 2026 Nexus-XPanel | Developed by <strong>Carmine D'Alise</strong> - Senior Digital Experience Lead</p>
+    </footer>
+
 </body>
 </html>
