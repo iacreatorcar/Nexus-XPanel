@@ -1,0 +1,150 @@
+:root {
+    --primary-cyan: #00f2ff;
+    --accent-glow: rgba(0, 242, 255, 0.4);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --font-ui: 'Inter', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #000;
+    font-family: var(--font-ui);
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sfondo Immersivo */
+.bg-container {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.35) contrast(1.1) blur(2px);
+    transform: scale(1.1);
+    animation: slowZoom 30s infinite alternate ease-in-out;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.15); }
+}
+
+/* Header di Navigazione */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 60px;
+    height: 100px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 200;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+
+.top-info {
+    font-weight: 300;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* Griglia Bento Dinamica */
+.container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 280px); /* Ottimizzato per 2 righe */
+    gap: 25px;
+    padding: 0 60px 40px 60px;
+    height: calc(100vh - 150px);
+}
+
+/* Base Card */
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Effetto Luce al Passaggio */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: 0.5s;
+}
+
+.card:hover::before { left: 100%; }
+
+.card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+    transform: translateY(-12px);
+}
+
+/* Gerarchia Griglia */
+.card-main { grid-column: span 2; grid-row: span 2; } /* IPTV */
+.card-wide { grid-column: span 2; }                /* Bridge */
+.card-smart { grid-column: span 1; }               /* Clima/Luci */
+
+/* Dettagli Interni */
+.status-dot {
+    width: 8px; height: 8px;
+    background: var(--primary-cyan);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    box-shadow: 0 0 12px var(--primary-cyan);
+}
+
+.big-val {
+    font-size: 64px;
+    font-weight: 100;
+    line-height: 1;
+}
+
+.unit { font-size: 24px; opacity: 0.5; margin-left: 5px; }
+
+.nav-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.data-item { text-align: center; }
+.data-item span { font-size: 32px; font-weight: 600; display: block; }
+.data-item small { color: var(--primary-cyan); letter-spacing: 2px; }
+
+/* Responsive per Tablet */
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+        overflow-y: auto;
+    }
+    .card-main, .card-wide { grid-column: span 2; }
+}

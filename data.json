@@ -1,0 +1,38 @@
+{
+  "yacht_info": {
+    "name": "Nexus Genesis",
+    "location": "Porto Cervo",
+    "external_temp": 24
+  },
+  "iptv_channels": [
+    {"id": 1, "name": "CNN", "group": "News", "url": "http://stream..."},
+    {"id": 2, "name": "Sky Sport", "group": "Sport", "url": "http://stream..."}
+  ],
+  "domotica_zones": [
+    {
+      "zone": "Main Deck",
+      "lights": {"status": "on", "dimmer": 80, "color": "#00f2ff"},
+      "clima": {"current": 22.5, "target": 21.0}
+    }
+  ]
+}
+{
+  "yacht": {
+    "name": "NEXUS GENESIS",
+    "location": "PORT CERVO",
+    "temp_ext": 24,
+    "telemetry": {
+      "speed": 18.4,
+      "heading": 245,
+      "depth": 42
+    }
+  },
+  "iptv": {
+    "current_preview": "CNN INTERNATIONAL",
+    "channels_count": "4000+"
+  },
+  "domotica": {
+    "clima": 22.5,
+    "lights_scene": "Sunset Mood"
+  }
+}

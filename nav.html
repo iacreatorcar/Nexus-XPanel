@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Bridge - Navigation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .bridge-body { margin: 0; overflow: hidden; background: #050505; font-family: 'Segoe UI', sans-serif; }
+        
+        /* Mappa a tutto schermo */
+        #map-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            filter: invert(90%) hue-rotate(180deg) brightness(0.6) contrast(1.2); /* Effetto Radar Dark */
+            z-index: 1;
+        }
+
+        /* Overlay HUD */
+        .hud-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.4) 100%);
+        }
+
+        .hud-top { display: flex; justify-content: space-between; pointer-events: auto; }
+        
+        /* Strumenti laterali */
+        .instrument-side {
+            background: rgba(0, 20, 30, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--primary-cyan);
+            padding: 20px;
+            border-radius: 20px;
+            pointer-events: auto;
+        }
+
+        .data-box { margin-bottom: 20px; }
+        .data-box label { font-size: 10px; color: var(--primary-cyan); letter-spacing: 2px; display: block; }
+        .data-box span { font-size: 28px; font-weight: 200; color: #fff; }
+
+        /* Radar rotante */
+        .radar-box {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px solid var(--primary-cyan);
+            border-radius: 50%;
+            background: repeating-radial-gradient(circle, transparent, transparent 20px, rgba(0, 242, 255, 0.1) 21px);
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0; left: 50%;
+            background: linear-gradient(90deg, rgba(0, 242, 255, 0.4), transparent);
+            transform-origin: bottom left;
+            animation: sweep 4s linear infinite;
+            border-left: 1px solid var(--primary-cyan);
+        }
+
+        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Coordinate centrali */
+        .coordinates {
+            text-align: center;
+            font-family: monospace;
+            color: var(--primary-cyan);
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 50px;
+        }
+
+        .waypoint-line {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200px;
+            height: 2px;
+            background: dashed var(--primary-cyan);
+            transform: rotate(-45deg);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bridge-body">
+
+    <div id="map-container">
+        <iframe width="100%" height="100%" frameborder="0" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d158858.4734000261!2d9.1899!3d45.4642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit"></iframe>
+    </div>
+
+    <div class="hud-layer">
+        <div class="hud-top">
+            <button onclick="location.href='index.html'" class="back-btn">◀ EXIT BRIDGE</button>
+            <div class="coordinates">LAT: 40° 48' 14" N | LON: 14° 20' 01" E</div>
+            <div class="radar-box">
+                <div class="radar-sweep"></div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div class="instrument-side">
+                <div class="data-box">
+                    <label>SPEED OVER GROUND</label>
+                    <span id="speed">18.4</span> <small>KTS</small>
+                </div>
+                <div class="data-box">
+                    <label>HEADING</label>
+                    <span id="heading">245</span>°
+                </div>
+                <div class="data-box">
+                    <label>DEPTH</label>
+                    <span id="depth" style="color: #00f2ff;">42.0</span> <small>M</small>
+                </div>
+            </div>
+
+            <div class="instrument-side" style="text-align: right;">
+                <div class="data-box">
+                    <label>ETA TO DESTINATION</label>
+                    <span>02:45</span> <small>HRS</small>
+                </div>
+                <div class="data-box">
+                    <label>WIND SPEED</label>
+                    <span>12</span> <small>KN</small>
+                </div>
+                <button class="scene-btn" style="padding: 10px 20px; font-size: 10px;">SET NEW WAYPOINT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulazione movimento dati per rendere la plancia "viva"
+        setInterval(() => {
+            // Variazione velocità
+            const speed = (18.2 + Math.random() * 0.5).toFixed(1);
+            document.getElementById('speed').innerText = speed;
+
+            // Variazione profondità
+            const depth = (41.5 + Math.random() * 1.5).toFixed(1);
+            document.getElementById('depth').innerText = depth;
+            
+            // Variazione Heading
+            const heading = Math.floor(244 + Math.random() * 3);
+            document.getElementById('heading').innerText = heading;
+        }, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Control - Domotica</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .domo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            padding: 40px 60px;
+        }
+
+        .control-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 40px;
+            transition: 0.5s ease;
+        }
+
+        /* Clima Gauge */
+        .clima-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .temp-value {
+            font-size: 80px;
+            font-weight: 100;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* Slider Custom */
+        .slider-container { margin-top: 30px; }
+        .nexus-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+            cursor: pointer;
+        }
+        .nexus-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            box-shadow: 0 0 15px var(--primary-cyan);
+            cursor: pointer;
+        }
+
+        /* RGB Circle */
+        .rgb-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        #color-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 40px var(--accent-glow);
+            transition: 0.3s;
+        }
+
+        /* Scene Buttons */
+        .scene-grid {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .scene-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.3s;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        .scene-btn:hover {
+            background: var(--primary-cyan);
+            color: black;
+            font-weight: bold;
+            transform: translateY(-5px);
+        }
+
+        .back-nav { padding: 40px 60px 0 60px; }
+    </style>
+</head>
+<body>
+
+    <div class="back-nav">
+        <button onclick="location.href='index.html'" class="back-btn">◀ BACK TO BRIDGE</button>
+    </div>
+
+    <div class="domo-grid">
+        <div class="control-card" id="clima-card">
+            <h3 style="letter-spacing: 2px; opacity: 0.7;">CLIMATE CONTROL</h3>
+            <div class="clima-display">
+                <div class="temp-value"><span id="temp-num">22</span>°C</div>
+                <p id="clima-status" style="color: var(--primary-cyan);">OPTIMAL</p>
+            </div>
+            <div class="slider-container">
+                <input type="range" min="16" max="30" value="22" class="nexus-slider" id="temp-slider">
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; opacity: 0.5; font-size: 12px;">
+                <span>16°C</span>
+                <span>30°C</span>
+            </div>
+        </div>
+
+        <div class="control-card">
+            <h3 style="letter-spacing: 2px; opacity: 0.7;">AMBIENT LIGHTING</h3>
+            <div class="rgb-controls">
+                <div id="color-preview"></div>
+                <input type="color" id="rgb-picker" value="#00f2ff" style="width: 100%; height: 50px; background: none; border: none; cursor: pointer;">
+                <input type="range" min="0" max="100" value="80" class="nexus-slider" id="bright-slider">
+                <p style="font-size: 12px; opacity: 0.6;">BRIGHTNESS: <span id="bright-val">80</span>%</p>
+            </div>
+        </div>
+
+        <div class="scene-grid">
+            <div class="scene-btn" onclick="setScene('night')">🌙 NIGHT MODE</div>
+            <div class="scene-btn" onclick="setScene('party')">🎉 PARTY MODE</div>
+            <div class="scene-btn" onclick="setScene('relax')">🧘 RELAX</div>
+            <div class="scene-btn" onclick="setScene('full')">☀️ FULL LIGHTS</div>
+        </div>
+    </div>
+
+    <script>
+        // Logica Clima
+        const tempSlider = document.getElementById('temp-slider');
+        const tempNum = document.getElementById('temp-num');
+        const climaCard = document.getElementById('clima-card');
+
+        tempSlider.oninput = function() {
+            const val = this.value;
+            tempNum.innerText = val;
+            
+            // Cambia colore in base alla temperatura
+            if(val < 20) {
+                climaCard.style.boxShadow = "inset 0 0 50px rgba(0, 100, 255, 0.2)";
+                document.getElementById('clima-status').innerText = "COOLING";
+            } else if(val > 25) {
+                climaCard.style.boxShadow = "inset 0 0 50px rgba(255, 100, 0, 0.2)";
+                document.getElementById('clima-status').innerText = "HEATING";
+            } else {
+                climaCard.style.boxShadow = "none";
+                document.getElementById('clima-status').innerText = "OPTIMAL";
+            }
+        }
+
+        // Logica Luci
+        const rgbPicker = document.getElementById('rgb-picker');
+        const colorPreview = document.getElementById('color-preview');
+        const brightSlider = document.getElementById('bright-slider');
+
+        rgbPicker.oninput = function() {
+            colorPreview.style.backgroundColor = this.value;
+            colorPreview.style.boxShadow = `0 0 40px ${this.value}`;
+        }
+
+        brightSlider.oninput = function() {
+            document.getElementById('bright-val').innerText = this.value;
+            colorPreview.style.opacity = this.value / 100;
+        }
+
+       // Funzione Scene Aggiornata e Completa
+        function setScene(mode) {
+            const statusLabel = document.getElementById('clima-status');
+            
+            if(mode === 'night') {
+                rgbPicker.value = "#990000"; // Rosso profondo per navigazione notturna
+                tempSlider.value = 21;
+                brightSlider.value = 15;
+                statusLabel.innerText = "NIGHT MODE ACTIVE";
+            } 
+            else if(mode === 'party') {
+                rgbPicker.value = "#ff00ff"; // Magenta/Viola party
+                tempSlider.value = 20;       // Rinfresca se c'è gente
+                brightSlider.value = 100;
+                statusLabel.innerText = "PARTY MODE ACTIVE";
+            } 
+            else if(mode === 'relax') {
+                rgbPicker.value = "#0077ff"; // Blu mare rilassante
+                tempSlider.value = 23;
+                brightSlider.value = 40;
+                statusLabel.innerText = "RELAX MODE ACTIVE";
+            } 
+            else if(mode === 'full') {
+                rgbPicker.value = "#ffffff"; // Luce Bianca Totale
+                tempSlider.value = 22;
+                brightSlider.value = 100;
+                statusLabel.innerText = "ALL LIGHTS ON";
+            }
+
+            // IMPORTANTE: Trigger degli update per aggiornare l'interfaccia visiva
+            rgbPicker.dispatchEvent(new Event('input'));
+            tempSlider.dispatchEvent(new Event('input'));
+            brightSlider.dispatchEvent(new Event('input'));
+
+            // Effetto feedback visivo sul pulsante
+            console.log("Scena impostata: " + mode);
+        }
+        // Init colore iniziale
+        rgbPicker.oninput();
+    </script>
+</body>
+</html>

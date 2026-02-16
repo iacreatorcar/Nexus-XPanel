@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus IPTV - Premium Yacht Media</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        .iptv-container { display: flex; height: 100vh; background: #000; overflow: hidden; }
+        .sidebar { width: 300px; border-right: 1px solid var(--glass-border); padding: 30px; backdrop-filter: blur(30px); z-index: 10; }
+        .main-content { flex: 1; padding: 40px; display: flex; flex-direction: column; overflow-y: auto; }
+
+        /* Area Display (Player o Immagine) */
+        .display-wrapper { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #111; 
+            border-radius: 25px; 
+            overflow: hidden; 
+            border: 1px solid var(--glass-border); 
+            margin-bottom: 30px; 
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+        #main-video { width: 100%; height: 100%; object-fit: cover; display: none; }
+        #main-image { width: 100%; height: 100%; object-fit: contain; display: block; }
+        
+        .display-overlay {
+            position: absolute; bottom: 20px; left: 20px;
+            background: rgba(0,0,0,0.6); padding: 10px 20px;
+            border-radius: 10px; border-left: 4px solid var(--primary-cyan);
+            font-size: 12px; letter-spacing: 1px; font-weight: bold;
+        }
+
+        /* Griglia Tasti */
+        .channel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .ch-btn { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); 
+            border-radius: 20px; padding: 15px; cursor: pointer; transition: 0.4s;
+            text-align: center; position: relative;
+        }
+        .ch-btn:hover { border-color: var(--primary-cyan); transform: scale(1.05); background: rgba(255,255,255,0.05); }
+        .ch-btn img { width: 100%; height: 90px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
+        .ch-btn p { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #fff; margin: 0; }
+        .active-ch { border-color: var(--primary-cyan); box-shadow: 0 0 20px var(--accent-glow); }
+        
+        .type-badge { position: absolute; top: 10px; right: 10px; font-size: 9px; background: var(--primary-cyan); color: #000; padding: 2px 6px; border-radius: 5px; font-weight: 800; z-index: 2; }
+        
+        /* Scrollbar personalizzata */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="iptv-container">
+    <aside class="sidebar">
+        <button onclick="location.href='index.html'" class="back-btn">◀ DASHBOARD</button>
+        <div style="margin-top:50px;">
+            <h1 style="font-weight:200; letter-spacing:3px; margin:0;">MEDIA</h1>
+            <h2 style="color:var(--primary-cyan); font-size:11px; margin-bottom:40px; letter-spacing:1px;">YACHT ENTERTAINMENT SYSTEM</h2>
+            
+            <div id="info-panel" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid var(--glass-border);">
+                <p style="opacity:0.5; font-size:10px; margin:0; letter-spacing:1px;">SELECTED SOURCE:</p>
+                <h3 id="current-title" style="margin-top:8px; text-transform:uppercase; font-size:16px; color:var(--primary-cyan);">Welcome</h3>
+                <p id="source-status" style="font-size:11px; opacity:0.7; margin-top:5px;">System Standby</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="display-wrapper">
+            <video id="main-video" controls autoplay muted></video>
+            <img id="main-image" src="assets/image/intro-page.jpg">
+            <div class="display-overlay" id="overlay-text">STANDBY MODE</div>
+        </div>
+
+        <div class="channel-grid" id="channel-grid"></div>
+    </main>
+</div>
+
+<script>
+// Database Canali
+const mediaData = [
+    { id: 1, name: "Bridge Cam", src: "assets/image/ch1.jpg", thumb: "assets/image/ch1.jpg", type: "image" },
+    { id: 2, name: "Sport 24", src: "assets/image/schedule-sport24.jpg", thumb: "assets/image/ch2.png", type: "image" },
+    { id: 3, name: "CNN News", src: "assets/image/ch3.svg", thumb: "assets/image/ch3.svg", type: "image" },
+    { id: 4, name: "Kids TV 1", src: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", thumb: "assets/image/ch4.jpg", type: "video" },
+    { id: 5, name: "Kids TV 2", src: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", thumb: "assets/image/ch5.jpg", type: "video" },
+    { id: 6, name: "Kids TV 3", src: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", thumb: "assets/image/ch6.jpg", type: "video" },
+    { id: 7, name: "Service Ch", src: "assets/image/ch7.jpg", thumb: "assets/image/ch7.jpg", type: "image" }
+];
+
+const videoEl = document.getElementById('main-video');
+const imageEl = document.getElementById('main-image');
+const titleEl = document.getElementById('current-title');
+const statusEl = document.getElementById('source-status');
+const overlayEl = document.getElementById('overlay-text');
+const gridEl = document.getElementById('channel-grid');
+
+let hls = null;
+
+function initGrid() {
+    gridEl.innerHTML = "";
+    mediaData.forEach(item => {
+        const btn = document.createElement('div');
+        btn.className = 'ch-btn';
+        btn.innerHTML = `
+            <span class="type-badge">${item.type.toUpperCase()}</span>
+            <img src="${item.thumb}" onerror="this.src='https://via.placeholder.com/160x90/222/fff?text=CH+${item.id}'">
+            <p>${item.name}</p>
+        `;
+        btn.onclick = () => selectMedia(item, btn);
+        gridEl.appendChild(btn);
+    });
+}
+
+function selectMedia(item, element) {
+    document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active-ch'));
+    element.classList.add('active-ch');
+    
+    titleEl.innerText = item.name;
+    overlayEl.innerText = item.type === 'video' ? "LIVE STREAMING" : "INFO FEED";
+    statusEl.innerText = "Source: " + item.type.toUpperCase();
+
+    // Reset HLS
+    if (hls) {
+        hls.destroy();
+        hls = null;
+    }
+    videoEl.pause();
+    videoEl.src = "";
+
+    if (item.type === 'video') {
+        imageEl.style.display = 'none';
+        videoEl.style.display = 'block';
+
+        if (Hls.isSupported()) {
+            hls = new Hls();
+            hls.loadSource(item.src);
+            hls.attachMedia(videoEl);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                videoEl.play();
+            });
+        } 
+        else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+            // Supporto per Safari e iOS
+            videoEl.src = item.src;
+            videoEl.play();
+        }
+    } else {
+        // Gestione Immagini (Sport 24 mostra lo schedule qui)
+        videoEl.style.display = 'none';
+        imageEl.style.display = 'block';
+        imageEl.src = item.src;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initGrid);
+</script>
+
+</body>
+</html>

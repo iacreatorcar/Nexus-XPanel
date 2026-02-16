@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Music - Universal Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #050505; color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .music-nav { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+
+        .hub-container { display: flex; flex: 1; padding: 30px; gap: 30px; }
+
+        /* Sidebar Servizi */
+        .service-sidebar { width: 250px; display: flex; flex-direction: column; gap: 15px; }
+        .svc-btn { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px; border-radius: 20px; cursor: pointer; color: #888; transition: 0.3s;
+            text-align: left; font-weight: bold; font-size: 13px;
+        }
+        .svc-btn:hover, .svc-btn.active { background: var(--primary-cyan); color: #000; border-color: var(--primary-cyan); box-shadow: 0 0 20px rgba(0,242,255,0.3); }
+
+        /* Area Player Centrale */
+        .player-main { flex: 1; background: #111; border-radius: 40px; border: 1px solid #222; overflow: hidden; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Drop Zone (VLC Style) */
+        #local-player { 
+            display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
+        }
+        .drop-area {
+            border: 2px dashed #444; padding: 60px; border-radius: 30px; text-align: center;
+            transition: 0.3s; cursor: pointer;
+        }
+        .drop-area:hover { border-color: var(--primary-cyan); background: rgba(0,242,255,0.05); }
+        
+        audio { margin-top: 30px; width: 80%; filter: invert(1); }
+
+        .input-url-box {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 80%; display: flex; gap: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 50px;
+        }
+        .input-url-box input { flex: 1; background: transparent; border: none; color: white; padding: 10px 20px; outline: none; }
+        .input-url-box button { background: var(--primary-cyan); border: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="music-nav">
+        <button onclick="location.href='index.html'" class="back-btn">◀ EXIT MUSIC</button>
+        <div style="text-align: right;">
+            <h2 style="margin:0; letter-spacing:4px; font-weight:200;">NEXUS MEDIA HUB</h2>
+            <span style="font-size:10px; color:var(--primary-cyan);">MULTI-SOURCE AUDIO SYSTEM</span>
+        </div>
+    </div>
+
+    <div class="hub-container">
+        <div class="service-sidebar">
+            <div class="svc-btn active" onclick="loadSource('yt')">YouTube Music</div>
+            <div class="svc-btn" onclick="loadSource('spotify')">Spotify App</div>
+            <div class="svc-btn" onclick="loadSource('apple')">Apple Music</div>
+            <div class="svc-btn" onclick="loadSource('local')">Local Files (VLC)</div>
+        </div>
+
+        <div class="player-main">
+            <iframe id="media-frame" src="https://www.youtube.com/embed/videoseries?list=PLmXxqSJJq-yU-m8p_2vWj_vN5v_yE8o6f"></iframe>
+            
+            <div id="local-player">
+                <div class="drop-area" id="drop-zone">
+                    <div style="font-size: 50px;">📁</div>
+                    <h3>DRAG & DROP MUSIC</h3>
+                    <p style="opacity: 0.5;">Trascina i tuoi MP3 qui per avviare la riproduzione</p>
+                    <input type="file" id="file-input" hidden accept="audio/*">
+                </div>
+                <audio id="audio-element" controls></audio>
+                <h4 id="track-name" style="margin-top: 20px; color: var(--primary-cyan);">Nessun file caricato</h4>
+            </div>
+
+            <div class="input-url-box" id="url-box">
+                <input type="text" id="custom-url" placeholder="Incolla qui un link YouTube o URL streaming...">
+                <button onclick="playCustomURL()">PLAY</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const frame = document.getElementById('media-frame');
+        const localPlayer = document.getElementById('local-player');
+        const urlBox = document.getElementById('url-box');
+        const audio = document.getElementById('audio-element');
+        const dropZone = document.getElementById('drop-zone');
+
+        // ... (nel tuo script esistente)
+
+function loadSource(type) {
+    // Reset UI
+    document.querySelectorAll('.svc-btn').forEach(b => b.classList.remove('active'));
+    // Usiamo event.currentTarget o cerchiamo il bottone cliccato
+    if (event) event.currentTarget.classList.add('active');
+    
+    frame.style.display = "none";
+    localPlayer.style.display = "none";
+    urlBox.style.display = "none";
+
+    if(type === 'yt') {
+        frame.style.display = "block";
+        urlBox.style.display = "flex";
+        // Inserito il tuo link convertito in formato embed
+        frame.src = "https://www.youtube.com/watch?v=xnnOXHhEnWc";
+    } 
+    else if(type === 'spotify') {
+        frame.style.display = "block";
+        frame.src = "https://open.spotify.com/embed/playlist/37i9dQZF1DXbTxeBdbCjOX"; // Esempio 90s Spotify
+    }
+    else if(type === 'apple') {
+        frame.style.display = "block";
+        frame.src = "https://embed.music.apple.com/it/playlist/i-successi-degli-anni-90/pl.d95f3299772d4c069b764f6c449302b1";
+    }
+    else if(type === 'local') {
+        localPlayer.style.display = "flex";
+    }
+}
+
+// Inizializza con il tuo video al caricamento della pagina
+window.onload = () => loadSource('yt');
+
+        // Funzione per caricare link YouTube manuali
+        function playCustomURL() {
+            let url = document.getElementById('custom-url').value;
+            if(url.includes('youtube.com/watch?v=')) {
+                let id = url.split('v=')[1].split('&')[0];
+                frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            } else {
+                alert("Per favore, inserisci un link YouTube valido.");
+            }
+        }
+
+        // Gestione Drag & Drop
+        dropZone.onclick = () => document.getElementById('file-input').click();
+        
+        document.getElementById('file-input').onchange = function(e) {
+            handleFiles(e.target.files);
+        };
+
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = "#00f2ff"; };
+        dropZone.ondragleave = () => { dropZone.style.borderColor = "#444"; };
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            handleFiles(e.dataTransfer.files);
+        };
+
+        function handleFiles(files) {
+            const file = files[0];
+            if(file && file.type.startsWith('audio/')) {
+                const url = URL.createObjectURL(file);
+                audio.src = url;
+                audio.play();
+                document.getElementById('track-name').innerText = "NOW PLAYING: " + file.name;
+            }
+        }
+    </script>
+</body>
+</html>

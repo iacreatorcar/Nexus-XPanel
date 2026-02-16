@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus OS - Welcome Onboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+        }
+
+        /* Sfondo */
+        .bg-setup {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('assets/image/intro-page.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 1;
+        }
+
+        .main-portal {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        /* Testi Superiori - Scuri per massima leggibilità */
+        .welcome-text {
+            animation: fadeIn 1.5s ease-out;
+            transition: transform 0.2s ease; /* Per l'effetto click */
+        }
+        
+        /* NEXUS si abbassa al click */
+        body:active .welcome-text {
+            transform: translateY(15px);
+        }
+
+        .welcome-text h1 { 
+            font-weight: 800; 
+            font-size: 70px; 
+            letter-spacing: 25px; 
+            margin: 0; 
+            color: #0a0a0a; /* Quasi nero per il sole */
+        }
+
+        .welcome-text p { 
+            color: #1a1a1a; 
+            letter-spacing: 6px; 
+            font-size: 16px; 
+            font-weight: 700;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* Griglia delle Card */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            max-width: 1200px;
+            width: 92%;
+        }
+
+        .portal-card {
+            background: rgba(0, 0, 0, 0.75); /* Molto scuro */
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 45px;
+            padding: 55px 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-20px);
+            border-color: #00f2ff;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+
+        .icon-box {
+            font-size: 45px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
+        }
+
+        /* Testo Card - Titoli molto scuri (su sfondo chiaro sarebbero stati illeggibili) */
+        /* Qui li teniamo bianchi o cyan perchè lo sfondo della card è scuro */
+        .portal-card h3 { 
+            color: #ffffff; 
+            font-size: 17px; 
+            letter-spacing: 2px; 
+            margin: 10px 0 5px 0; 
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        
+        .portal-card span { 
+            color: rgba(255, 255, 255, 0.5); 
+            font-size: 11px; 
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* Testo inferiore scuro */
+        .footer-text {
+            color: #0a0a0a;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(-30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        @media (max-width: 1024px) {
+            .portal-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .welcome-text h1 { font-size: 50px; letter-spacing: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-setup"></div>
+
+    <div class="main-portal">
+        <div class="welcome-text">
+            <h1>NEXUS</h1>
+            <p>INTEGRATED YACHT CONTROL</p>
+        </div>
+
+        <div class="portal-grid">
+            <a href="iptv.html" class="portal-card">
+                <div class="icon-box">📺</div>
+                <h3>Entertainment</h3>
+                <span>IPTV & MOVIES</span>
+            </a>
+
+            <a href="domotica.html" class="portal-card">
+                <div class="icon-box">🌡️</div>
+                <h3>Climate</h3>
+                <span>HVAC SYSTEM</span>
+            </a>
+
+            <a href="music.html" class="portal-card">
+                <div class="icon-box">🎵</div>
+                <h3>Music</h3>
+                <span>90s PLAYLIST</span>
+            </a>
+
+            <a href="nav.html" class="portal-card">
+                <div class="icon-box">🛰️</div>
+                <h3>Navigation</h3>
+                <span>BRIDGE SYSTEMS</span>
+            </a>
+        </div>
+        
+        <div class="footer-text">SECURE CONNECTION ACTIVE</div>
+    </div>
+
+</body>
+</html>
