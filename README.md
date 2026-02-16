@@ -1,6 +1,6 @@
 # 🛥️ Nexus-XPanel - Integrated Yacht Control System
 
-![Nexus-XPanel Landing Page](assets/landing-page.jpg)
+![Nexus-XPanel Landing Page](assets/images/landing-page.jpg)
 
 **Nexus-XPanel** is a high-end, integrated dashboard for luxury yacht management, optimized for touch-screen displays such as Microsoft Surface, iPads, and industrial marine monitors.
 
