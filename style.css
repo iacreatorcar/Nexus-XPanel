@@ -148,3 +148,29 @@ body {
     }
     .card-main, .card-wide { grid-column: span 2; }
 }
+
+.nexus-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.4); /* Sottile trasparenza */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-align: center;
+    z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nexus-footer p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.nexus-footer strong {
+    color: #00f2ff; /* Il tuo colore Cyan distintivo */
+    font-weight: 800;
+}
