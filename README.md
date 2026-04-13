@@ -118,7 +118,6 @@ class CrestronBridge {
 // Pattern 2: NMEA data simulation → real NMEA over TCP
 class NMEABridge {
   parseSentence(sentence) {
-    // $GPRMC,184510.00,A,4042.6142,N,07400.4168,W,0.037,0.00,060420,,,A*7A
     const parts = sentence.split(',');
     return {
       speed: parseFloat(parts[7]),
