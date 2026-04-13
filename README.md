@@ -1,6 +1,8 @@
 # 🛥️ Nexus-XPanel — Integrated Yacht Control System
 
-**Nexus-XPanel** is a high-end, integrated dashboard for luxury yacht management, optimized for touch-screen displays such as Microsoft Surface, iPads, and industrial marine monitors.
+**Nexus-XPanel** is a high-end, integrated dashboard for luxury yacht management, optimized for touch-screen displays such as Microsoft Surface, iPads, and industrial marine monitors
+
+![Nexus-XPanel Preview](assets/image/landing-page.svg)
 
 🌐 **Live Demo (GitHub):** https://iacreatorcar.github.io/Nexus-XPanel/  
 🚀 **Mirror Link (Vercel):** https://nexus-xpanel.vercel.app/
@@ -207,7 +209,5 @@ You are free to share and adapt this work for non-commercial purposes, provided 
 Carmine D'Alise — Digital Systems Leader | Hospitality & AV Tech | Full Stack Developer
 
 🔗 LinkedIn: carminedalise-digital
-
 🌐 Website: https://www.cdalise.com
-
-📧 Email: [carmine@cdalise.com]
+📧 Email: carmine@cdalise.com
